@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume - {{ personal_info.first_name }} {{ personal_info.last_name }}{% endblock %}
+
+{% block content %}
+<style>
+    body { background: #f8f8f8 !important; }
+    .classic-modern-wrap {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        background: #fff;
+        font-family: 'Georgia', serif;
+        color: #232526;
+        box-shadow: 0 0 24px rgba(0,0,0,0.10);
+        border-radius: 10px;
+        padding: 0;
+    }
+    .classic-modern-header {
+        background: #232b36;
+        color: #232526;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 32px 0 16px 0;
+        text-align: center;
+        border-bottom: 4px solid #bfa46d;
+        position: relative;
+    }
+    .classic-modern-header .name {
+        font-size: 2.7rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #232526;
+        background: #fff;
+        display: inline-block;
+        padding: 8px 32px;
+        border: 3px solid #bfa46d;
+        border-radius: 6px;
+        margin-bottom: 8px;
+    }
+    .classic-modern-header .title {
+        font-size: 1.1rem;
+        color: #232526;
+        letter-spacing: 4px;
+        margin-bottom: 0.5em;
+        font-weight: 500;
+    }
+    .classic-modern-contact {
+        color: #232526;
+        font-size: 1.05rem;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+    .classic-modern-section {
+        margin: 0 auto 24px auto;
+        max-width: 900px;
+        padding: 0 32px;
+    }
+    .classic-modern-section-title {
+        background: #232b36;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-align: center;
+        padding: 6px 0;
+        margin: 32px 0 16px 0;
+        border-radius: 4px;
+        border-bottom: 2px solid #bfa46d;
+    }
+    .classic-modern-gold-line {
+        border: none;
+        border-top: 2px solid #bfa46d;
+        margin: 24px 0;
+    }
+    .classic-modern-cols {
+        display: flex;
+        gap: 32px;
+        margin-bottom: 24px;
+    }
+    .classic-modern-col {
+        flex: 1;
+    }
+    .classic-modern-list {
+        list-style: disc inside;
+        margin: 0 0 2mm 2mm;
+        padding: 0;
+        font-size: 1.05rem;
+    }
+    .classic-modern-label {
+        font-weight: 600;
+        color: #232526;
+        margin-bottom: 4px;
+        display: block;
+    }
+</style>
+<div class="classic-modern-wrap">
+    <div class="classic-modern-header">
+        <div class="name">{{ personal_info.first_name|upper }} {{ personal_info.last_name|upper }}</div>
+        <div class="title">{{ personal_info.profession|upper }}</div>
+        <div class="classic-modern-contact">
+            <span>{{ personal_info.address }}</span>
+            <span>{{ personal_info.phone }}</span>
+            <span>{{ personal_info.email }}</span>
+        </div>
+    </div>
+    <div class="classic-modern-section">
+        <div class="classic-modern-section-title">OBJECTIVE</div>
+        <div>{{ personal_info.summary }}</div>
+    </div>
+    <hr class="classic-modern-gold-line" />
+    <div class="classic-modern-cols">
+        <div class="classic-modern-col">
+            <div class="classic-modern-section-title">EDUCATION</div>
+            {% for edu in educations %}
+                <div class="classic-modern-label">{{ edu.degree }}</div>
+                <div>{{ edu.school }}, {{ edu.city }}</div>
+                <div>{{ edu.start_date|date:'Y' }} - {{ edu.end_date|date:'Y' }}</div>
+                {% if edu.description %}<div>{{ edu.description }}</div>{% endif %}
+            {% empty %}<div>No education added yet.</div>{% endfor %}
+            <div class="classic-modern-section-title" style="margin-top:32px;">KEY SKILLS</div>
+            <ul class="classic-modern-list">
+                {% for skill in technical_skills %}
+                <li>{{ skill.name }}</li>
+                {% empty %}<li>No skills added.</li>{% endfor %}
+            </ul>
+        </div>
+        <div class="classic-modern-col">
+            <div class="classic-modern-section-title">EXPERIENCE</div>
+            {% for exp in work_experiences %}
+                <div class="classic-modern-label">{{ exp.title }}</div>
+                <div>{{ exp.company }}</div>
+                <div>{{ exp.start_date|date:'M Y' }} - {% if exp.end_date %}{{ exp.end_date|date:'M Y' }}{% else %}Present{% endif %}</div>
+                {% if exp.description %}<div>{{ exp.description }}</div>{% endif %}
+                {% if exp.responsibilities %}
+                <ul class="classic-modern-list">
+                    {% for item in exp.responsibilities.splitlines %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            {% empty %}<div>No experience added yet.</div>{% endfor %}
+        </div>
+    </div>
+    <hr class="classic-modern-gold-line" />
+    <div class="classic-modern-section">
+        <div class="classic-modern-section-title">COMMUNICATION</div>
+        <div>{% if personal_info.communication %}{{ personal_info.communication }}{% else %}Add your communication skills or achievements here.{% endif %}</div>
+    </div>
+    <div class="classic-modern-section">
+        <div class="classic-modern-section-title">LEADERSHIP</div>
+        <div>{% if personal_info.leadership %}{{ personal_info.leadership }}{% else %}Add your leadership experience or qualities here.{% endif %}</div>
+    </div>
+    <div class="classic-modern-section">
+        <div class="classic-modern-section-title">REFERENCES</div>
+        {% for ref in references %}
+            <div class="classic-modern-label">{{ ref.name }}</div>
+            <div>{{ ref.relationship }}</div>
+            <div>{{ ref.phone }} | {{ ref.email }}</div>
+            {% if ref.description %}<div>{{ ref.description }}</div>{% endif %}
+        {% empty %}<div>Available upon request.</div>{% endfor %}
+    </div>
+</div>
+{% endblock %} 

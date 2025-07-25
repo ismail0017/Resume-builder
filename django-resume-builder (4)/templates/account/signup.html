@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% load socialaccount %}
+
+{% block title %}Sign Up - Resume Builder{% endblock %}
+
+{% block public_content %}
+<div class="container py-5" style="max-width: 400px;">
+    <div class="mb-4">
+        <div class="alert alert-info text-center">
+            Create your account to start building professional resumes.
+        </div>
+    </div>
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <h2 class="mb-4 text-center">Create Account</h2>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    Please correct the errors below.
+                </div>
+            {% endif %}
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">Email</label>
+                    <input type="email" name="email" id="id_email" class="form-control" required placeholder="Enter your email">
+                    {{ form.email.errors }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Username</label>
+                    <input type="text" name="username" id="id_username" class="form-control" required placeholder="Choose a username">
+                    {{ form.username.errors }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label">Password</label>
+                    <input type="password" name="password1" id="id_password1" class="form-control" required placeholder="Create a password">
+                    {{ form.password1.errors }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label">Confirm Password</label>
+                    <input type="password" name="password2" id="id_password2" class="form-control" required placeholder="Confirm your password">
+                    {{ form.password2.errors }}
+                </div>
+                <button type="submit" class="btn btn-dark w-100">Create Account</button>
+            </form>
+            <hr>
+            <div class="text-center">
+                <a href="{% url 'account_login' %}" class="text-dark text-decoration-none">Have an account? Go to login</a>
+            </div>
+            {% if socialaccount_providers %}
+                <hr>
+                <div class="text-center mb-2">Or sign up with</div>
+                <div class="d-flex justify-content-center gap-2">
+                    {% providers_media_js %}
+                    {% for provider in socialaccount_providers %}
+                        <a class="btn btn-outline-dark" href="{% provider_login_url provider.id %}">
+                            {{ provider.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

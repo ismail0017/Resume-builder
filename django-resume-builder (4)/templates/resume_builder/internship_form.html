@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Resume Builder{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow rounded-4">
+                <div class="card-header bg-dark text-white">
+                    <h3 class="mb-0">{{ title }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <div class="mb-3">
+                            <label for="id_position" class="form-label">Position</label>
+                            {{ form.position }}
+                            {{ form.position.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_company" class="form-label">Company</label>
+                            {{ form.company }}
+                            {{ form.company.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_location" class="form-label">Location</label>
+                            {{ form.location }}
+                            {{ form.location.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_start_date" class="form-label">Start Date</label>
+                            {{ form.start_date }}
+                            {{ form.start_date.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_end_date" class="form-label">End Date</label>
+                            {{ form.end_date }}
+                            {{ form.end_date.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label">Description</label>
+                            {{ form.description }}
+                            {{ form.description.errors }}
+                        </div>
+                        <button type="submit" class="btn btn-dark btn-lg">Save</button>
+                        <a href="{% url 'internship_list' %}" class="btn btn-secondary btn-lg ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

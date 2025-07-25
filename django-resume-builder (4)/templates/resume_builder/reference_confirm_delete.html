@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Reference - Resume Builder{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow rounded-4">
+                <div class="card-body text-center">
+                    <h3 class="mb-3">Delete Reference</h3>
+                    <p>Are you sure you want to delete the reference <strong>{{ reference.name }}</strong> ({{ reference.relationship }})?</p>
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i> Yes, Delete
+                        </button>
+                    </form>
+                    <a href="{% url 'reference_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

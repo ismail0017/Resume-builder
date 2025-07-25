@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Resume Builder{% endblock %}
+
+{% block content %}
+<div class="education-form-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-card">
+                <div class="card-header bg-dark text-white">
+                    <h3 class="mb-0">{{ title }}</h3>
+                </div>
+                <div class="form-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.institution.id_for_label }}" class="form-label">Institution</label>
+                                {{ form.institution }}
+                                {% if form.institution.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.institution.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.degree.id_for_label }}" class="form-label">Degree</label>
+                                {{ form.degree }}
+                                {% if form.degree.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.degree.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.field_of_study.id_for_label }}" class="form-label">Field of Study</label>
+                                {{ form.field_of_study }}
+                                {% if form.field_of_study.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.field_of_study.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date</label>
+                                {{ form.start_date }}
+                                {% if form.start_date.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.start_date.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.end_date.id_for_label }}" class="form-label">End Date</label>
+                                {{ form.end_date }}
+                                {% if form.end_date.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.end_date.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.gpa.id_for_label }}" class="form-label">GPA</label>
+                                {{ form.gpa }}
+                                {% if form.gpa.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.gpa.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center">
+                                <div class="form-check mt-4">
+                                    {{ form.current }}
+                                    <label class="form-check-label ms-2" for="{{ form.current.id_for_label }}">
+                                        Currently Studying
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger mt-1">
+                                        {% for error in form.description.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Describe your academic achievements, relevant coursework, or research.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'education_list' %}" class="btn btn-secondary btn-lg">Cancel</a>
+                            <button type="submit" class="btn btn-dark btn-lg">Save Education</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.education-form-container {
+    background: #f5f7fa;
+    min-height: 100vh;
+    padding: 60px 0 50px 0;
+}
+
+.form-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 0;
+}
+
+.form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 0;
+}
+
+.form-body {
+    padding: 2.5rem 2rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.form-control-lg {
+    border-radius: 12px;
+    font-size: 1.1rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.form-check-input {
+    width: 1.5em;
+    height: 1.5em;
+    margin-top: 0.1em;
+}
+
+.btn-warning {
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .form-title {
+        font-size: 1.5rem;
+    }
+    .form-body {
+        padding: 1.5rem 1rem;
+    }
+}
+</style>
+{% endblock %}

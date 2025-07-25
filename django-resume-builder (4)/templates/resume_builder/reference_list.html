@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}References - Resume Builder{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center mb-4">
+        <div class="col-lg-8">
+            <h1 class="fw-bold mb-2" style="color: #232526;">
+                <i class="fas fa-user-friends me-3 text-success"></i>
+                References
+            </h1>
+            <p class="lead mb-0" style="color: #555;">
+                Add professional or personal references for your resume
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <a href="{% url 'reference_create' %}" class="btn btn-success btn-lg">
+                <i class="fas fa-plus me-2"></i>Add Reference
+            </a>
+        </div>
+    </div>
+    <div class="row g-4">
+        {% for reference in references %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow rounded-4 h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-2" style="color: #232526;">{{ reference.name }}</h5>
+                    <p class="card-text text-muted mb-1">{{ reference.relationship }}{% if reference.company %} at {{ reference.company }}{% endif %}</p>
+                    <p class="card-text text-muted mb-1">Email: {{ reference.email }}</p>
+                    <p class="card-text text-muted mb-1">Phone: {{ reference.phone }}</p>
+                    <p class="card-text text-muted mb-2">{{ reference.notes }}</p>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'reference_update' reference.id %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'reference_delete' reference.id %}" class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center rounded-4 shadow-sm">
+                You have not added any references yet. Click "Add Reference" to get started!
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,395 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume Preview - {{ resume.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Template Selection Sidebar -->
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Template Options</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Current Template</label>
+                        <select class="form-select" id="templateSelect">
+                            <option value="classic" {% if resume.template.name == 'Classic' %}selected{% endif %}>Classic</option>
+                            <option value="modern" {% if resume.template.name == 'Modern' %}selected{% endif %}>Modern</option>
+                            <option value="professional" {% if resume.template.name == 'Professional' %}selected{% endif %}>Professional</option>
+                            <option value="minimalist" {% if resume.template.name == 'Minimalist' %}selected{% endif %}>Minimalist</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Export Options</label>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'export_pdf' resume.id %}" class="btn btn-success">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </a>
+                            <button class="btn btn-outline-primary">
+                                <i class="fas fa-file-word"></i> Export Word
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <i class="fas fa-print"></i> Print Resume
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Resume Actions</label>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'resume_list' %}" class="btn btn-outline-secondary">Back to Resumes</a>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-info">Edit Content</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resume Preview -->
+        <div class="col-md-9">
+            <div class="card shadow">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">{{ resume.title }}</h4>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-outline-primary btn-sm" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print (A4)
+                        </button>
+                        <a href="{% url 'export_pdf' resume.id %}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-download"></i> Download PDF (A4)
+                        </a>
+                        <a href="{% url 'export_docx' resume.id %}" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-file-word"></i> Download Word (A4)
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Resume Content -->
+                    <div class="resume-content" id="resumeContent">
+                        <!-- Header Section -->
+                        {% if personal_info %}
+                        <div class="resume-header text-center mb-4">
+                            <h1 class="display-5 fw-bold text-primary">{{ personal_info.first_name }} {{ personal_info.last_name }}</h1>
+                            <div class="contact-info">
+                                <p class="mb-1">
+                                    <i class="fas fa-envelope"></i> {{ personal_info.email }} |
+                                    <i class="fas fa-phone"></i> {{ personal_info.phone }} |
+                                    <i class="fas fa-map-marker-alt"></i> {{ personal_info.city }}, {{ personal_info.state }}
+                                </p>
+                                {% if personal_info.linkedin_url %}
+                                <p class="mb-0">
+                                    <i class="fab fa-linkedin"></i> <a href="{{ personal_info.linkedin_url }}" target="_blank">LinkedIn</a>
+                                    {% if personal_info.github_url %} | <i class="fab fa-github"></i> <a href="{{ personal_info.github_url }}" target="_blank">GitHub</a>{% endif %}
+                                    {% if personal_info.website_url %} | <i class="fas fa-globe"></i> <a href="{{ personal_info.website_url }}" target="_blank">Website</a>{% endif %}
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Picture -->
+                        {% if personal_info.profile_picture %}
+                        <div class="text-center mb-4">
+                            <img src="{{ personal_info.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Professional Summary -->
+                        {% if personal_info.summary %}
+                        <div class="resume-section mb-4">
+                            <h3 class="section-title"><i class="fas fa-user"></i> Professional Summary</h3>
+                            <p class="summary-text">{{ personal_info.summary }}</p>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                        
+                        <!-- Work Experience -->
+                        {% if work_experiences %}
+                        <div class="resume-section mb-4">
+                            <h3 class="section-title"><i class="fas fa-briefcase"></i> Work Experience</h3>
+                            {% for experience in work_experiences %}
+                            <div class="experience-item mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="job-title mb-1">{{ experience.position }}</h5>
+                                        <h6 class="company-name text-primary mb-1">{{ experience.company }}</h6>
+                                        <p class="location text-muted mb-1">{{ experience.location }}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="date-range">
+                                            {{ experience.start_date|date:"M Y" }} - 
+                                            {% if experience.current %}Present{% else %}{{ experience.end_date|date:"M Y" }}{% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="description">{{ experience.description }}</p>
+                                {% if experience.achievements %}
+                                <p class="achievements"><strong>Key Achievements:</strong> {{ experience.achievements }}</p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Education -->
+                        {% if educations %}
+                        <div class="resume-section mb-4">
+                            <h3 class="section-title"><i class="fas fa-graduation-cap"></i> Education</h3>
+                            {% for education in educations %}
+                            <div class="education-item mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="degree mb-1">{{ education.degree }}</h5>
+                                        <h6 class="institution text-primary mb-1">{{ education.institution }}</h6>
+                                        <p class="field-of-study text-muted mb-1">{{ education.field_of_study }}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="date-range">
+                                            {{ education.start_date|date:"M Y" }} - 
+                                            {% if education.current %}Present{% else %}{{ education.end_date|date:"M Y" }}{% endif %}
+                                        </span>
+                                        {% if education.gpa %}
+                                        <br><span class="gpa">GPA: {{ education.gpa }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if education.description %}
+                                <p class="description">{{ education.description }}</p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Projects -->
+                        {% if projects %}
+                        <div class="resume-section mb-4">
+                            <h3 class="section-title"><i class="fas fa-project-diagram"></i> Projects</h3>
+                            {% for project in projects %}
+                            <div class="project-item mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="project-title mb-1">{{ project.title }}</h5>
+                                        <p class="technologies text-muted mb-1">{{ project.technologies }}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="date-range">
+                                            {{ project.start_date|date:"M Y" }} - 
+                                            {% if project.current %}Present{% else %}{{ project.end_date|date:"M Y" }}{% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="description">{{ project.description }}</p>
+                                <div class="project-links">
+                                    {% if project.url %}
+                                    <a href="{{ project.url }}" target="_blank" class="btn btn-sm btn-outline-primary">Live Demo</a>
+                                    {% endif %}
+                                    {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" target="_blank" class="btn btn-sm btn-outline-secondary">GitHub</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Skills -->
+                        {% if skills %}
+                        <div class="resume-section mb-4">
+                            <h3 class="section-title"><i class="fas fa-tools"></i> Technical Skills</h3>
+                            <div class="row">
+                                {% for skill in skills %}
+                                <div class="col-md-6 mb-2">
+                                    <div class="skill-item">
+                                        <span class="skill-name">{{ skill.name }}</span>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-primary" style="width: {% widthratio skill.proficiency 1 10 %}%"></div>
+                                        </div>
+                                        <small class="text-muted">{{ skill.proficiency }}/10</small>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Certifications -->
+                        {% if certifications %}
+                        <div class="resume-section mb-4">
+                            <h3 class="section-title"><i class="fas fa-certificate"></i> Certifications</h3>
+                            {% for certification in certifications %}
+                            <div class="certification-item mb-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="certification-name mb-1">{{ certification.name }}</h6>
+                                        <p class="issuing-org text-muted mb-1">{{ certification.issuing_organization }}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="issue-date">{{ certification.issue_date|date:"M Y" }}</span>
+                                        {% if certification.credential_id %}
+                                        <br><small class="text-muted">ID: {{ certification.credential_id }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if certification.url %}
+                                <a href="{{ certification.url }}" target="_blank" class="btn btn-sm btn-outline-success">View Certificate</a>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Awards -->
+                        {% if awards %}
+                        <div class="resume-section mb-4">
+                            <h3 class="section-title"><i class="fas fa-trophy"></i> Awards & Achievements</h3>
+                            {% for award in awards %}
+                            <div class="award-item mb-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="award-title mb-1">{{ award.title }}</h6>
+                                        <p class="issuing-org text-muted mb-1">{{ award.issuing_organization }}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="date-received">{{ award.date_received|date:"M Y" }}</span>
+                                    </div>
+                                </div>
+                                {% if award.description %}
+                                <p class="description">{{ award.description }}</p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Languages -->
+                        {% if languages %}
+                        <div class="resume-section mb-4">
+                            <h3 class="section-title"><i class="fas fa-language"></i> Languages</h3>
+                            <div class="row">
+                                {% for language in languages %}
+                                <div class="col-md-4 mb-2">
+                                    <div class="language-item">
+                                        <span class="language-name">{{ language.name }}</span>
+                                        <span class="badge bg-info">{{ language.get_proficiency_display }}</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.resume-content {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.section-title {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.job-title, .project-title, .degree, .certification-name, .award-title {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.company-name, .institution {
+    color: #3498db;
+    font-weight: 500;
+}
+
+.date-range {
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+.description {
+    color: #34495e;
+    margin-top: 8px;
+}
+
+.skill-item {
+    margin-bottom: 10px;
+}
+
+.skill-name {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.language-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+.contact-info {
+    color: #7f8c8d;
+    font-size: 0.95em;
+}
+
+.contact-info a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+@media print {
+    .col-md-3 {
+        display: none;
+    }
+    .col-md-9 {
+        width: 100%;
+    }
+    .card {
+        border: none;
+        box-shadow: none;
+    }
+    .btn-group {
+        display: none;
+    }
+}
+</style>
+
+<script>
+document.getElementById('templateSelect').addEventListener('change', function() {
+    // Here you would implement template switching functionality
+    console.log('Template changed to:', this.value);
+    // You could make an AJAX call to update the template
+});
+
+// Print functionality
+function printResume() {
+    window.print();
+}
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Auto-trigger print dialog if ?auto_pdf=1 is in the URL
+  if (window.location.search.includes('auto_pdf=1')) {
+    window.onload = function() {
+      setTimeout(function() { window.print(); }, 500);
+    };
+  }
+</script>
+{% endblock %}

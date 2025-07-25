@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume - {{ personal_info.first_name }} {{ personal_info.last_name }}{% endblock %}
+
+{% block content %}
+<style>
+    body { background: #f7fafd !important; }
+    .modern-sidebar-resume {
+        display: flex;
+        max-width: 1000px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 0 24px rgba(0,0,0,0.10);
+        overflow: hidden;
+        font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    }
+    .modern-sidebar {
+        background: #232323;
+        color: #fff;
+        width: 270px;
+        padding: 40px 28px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .modern-sidebar .ms-photo {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: #fff;
+        overflow: hidden;
+        margin-bottom: 24px;
+        border: 3px solid #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .modern-sidebar .ms-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .modern-sidebar .ms-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.2em;
+    }
+    .modern-sidebar .ms-title {
+        font-size: 1.05rem;
+        font-weight: 500;
+        margin-bottom: 1.2em;
+        color: #a5b4fc;
+    }
+    .modern-sidebar .ms-section-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #fff;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .modern-sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .modern-sidebar li {
+        margin-bottom: 7px;
+        font-size: 1rem;
+    }
+    .modern-main {
+        flex: 1;
+        padding: 40px 36px;
+    }
+    .modern-main .mm-header {
+        border-bottom: 2px solid #232323;
+        margin-bottom: 24px;
+        padding-bottom: 10px;
+    }
+    .modern-main .mm-name {
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .modern-main .mm-title {
+        font-size: 1.1rem;
+        color: #232323;
+        font-weight: 500;
+        margin-bottom: 0.5em;
+    }
+    .modern-main .mm-section {
+        margin-bottom: 32px;
+    }
+    .modern-main .mm-section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #232323;
+        margin-bottom: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .modern-main .mm-timeline {
+        border-left: 2px solid #232323;
+        margin-left: 10px;
+        padding-left: 20px;
+    }
+    .modern-main .mm-timeline-item {
+        position: relative;
+        margin-bottom: 24px;
+    }
+    .modern-main .mm-timeline-item:before {
+        content: '';
+        position: absolute;
+        left: -30px;
+        top: 6px;
+        width: 14px;
+        height: 14px;
+        background: #232323;
+        border-radius: 50%;
+    }
+    .modern-main .mm-exp-title {
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+    .modern-main .mm-exp-company {
+        color: #38bdf8;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    .modern-main .mm-exp-dates {
+        font-size: 0.95rem;
+        color: #888;
+    }
+    .modern-main .mm-skill-bar {
+        background: #e0e0e0;
+        border-radius: 8px;
+        height: 8px;
+        width: 100px;
+        margin-left: 8px;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .modern-main .mm-skill-bar-fill {
+        background: #232323;
+        height: 100%;
+        border-radius: 8px;
+    }
+</style>
+<div class="modern-sidebar-resume">
+    <div class="modern-sidebar">
+        <div class="ms-photo">
+            {% if personal_info.profile_picture %}
+                <img src="{{ personal_info.profile_picture.url }}" alt="Photo">
+            {% else %}
+                <img src="/static/resume_templates/default_photo.png" alt="Photo">
+            {% endif %}
+        </div>
+        <div class="ms-name">{{ personal_info.first_name|title }} {{ personal_info.last_name|title }}</div>
+        <div class="ms-title">{{ personal_info.profession }}</div>
+        <div class="ms-section-title"><i class="fas fa-address-book"></i> Contact</div>
+        <ul>
+            <li><i class="fas fa-phone"></i> {{ personal_info.phone }}</li>
+            <li><i class="fas fa-envelope"></i> {{ personal_info.email }}</li>
+            <li><i class="fas fa-map-marker-alt"></i> {{ personal_info.address }}</li>
+        </ul>
+        <div class="ms-section-title"><i class="fas fa-users"></i> References</div>
+        <ul>
+            {% for ref in references %}
+                <li><strong>{{ ref.name }}</strong> - {{ ref.relationship }}<br><span style="font-size:0.95em;">{{ ref.phone }} | {{ ref.email }}</span></li>
+            {% empty %}<li style="color:#bcd;">No references added.</li>{% endfor %}
+        </ul>
+    </div>
+    <div class="modern-main">
+        <div class="mm-header">
+            <div class="mm-name">{{ personal_info.first_name|title }} {{ personal_info.last_name|title }}</div>
+            <div class="mm-title">{{ personal_info.profession }}</div>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-user"></i> Profile</div>
+            <div>{{ personal_info.summary }}</div>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-briefcase"></i> Work Experience</div>
+            <div class="mm-timeline">
+                {% for exp in work_experiences %}
+                    <div class="mm-timeline-item">
+                        <div class="mm-exp-title">{{ exp.title }}</div>
+                        <div class="mm-exp-company">{{ exp.company }}</div>
+                        <div class="mm-exp-dates">{{ exp.start_date|date:'M Y' }} - {% if exp.end_date %}{{ exp.end_date|date:'M Y' }}{% else %}Present{% endif %}</div>
+                        <ul>
+                            {% if exp.description %}<li>{{ exp.description }}</li>{% endif %}
+                            {% if exp.responsibilities %}
+                                {% for item in exp.responsibilities.splitlines %}
+                                    <li>{{ item }}</li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% empty %}<div>No experience added yet.</div>{% endfor %}
+            </div>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-graduation-cap"></i> Education</div>
+            <div class="mm-timeline">
+                {% for edu in educations %}
+                    <div class="mm-timeline-item">
+                        <div class="mm-edu-degree">{{ edu.degree }}</div>
+                        <div class="mm-edu-school">{{ edu.school }}</div>
+                        <div class="mm-edu-dates">{{ edu.start_date|date:'Y' }} - {{ edu.end_date|date:'Y' }}</div>
+                        <ul>
+                            {% if edu.description %}<li>{{ edu.description }}</li>{% endif %}
+                        </ul>
+                    </div>
+                {% empty %}<div>No education added yet.</div>{% endfor %}
+            </div>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-project-diagram"></i> Projects</div>
+            <div class="mm-timeline">
+                {% for project in projects %}
+                    <div class="mm-timeline-item">
+                        <div class="mm-exp-title">{{ project.title }}</div>
+                        <ul>
+                            {% if project.description %}<li>{{ project.description }}</li>{% endif %}
+                        </ul>
+                    </div>
+                {% empty %}<div>No projects added yet.</div>{% endfor %}
+            </div>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-certificate"></i> Certifications</div>
+            <div class="mm-timeline">
+                {% for cert in certifications %}
+                    <div class="mm-timeline-item">
+                        <div class="mm-exp-title">{{ cert.name }}</div>
+                        <div class="mm-exp-company">{{ cert.issuing_organization }}</div>
+                        <div class="mm-exp-dates">{{ cert.issue_date|date:'Y-m-d' }}</div>
+                        <ul>
+                            {% if cert.description %}<li>{{ cert.description }}</li>{% endif %}
+                        </ul>
+                    </div>
+                {% empty %}<div>No certifications added yet.</div>{% endfor %}
+            </div>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-trophy"></i> Awards</div>
+            <div class="mm-timeline">
+                {% for award in awards %}
+                    <div class="mm-timeline-item">
+                        <div class="mm-exp-title">{{ award.title }}</div>
+                        <div class="mm-exp-company">{{ award.issuing_organization }}</div>
+                        <div class="mm-exp-dates">{{ award.date_received|date:'Y-m-d' }}</div>
+                        <ul>
+                            {% if award.description %}<li>{{ award.description }}</li>{% endif %}
+                        </ul>
+                    </div>
+                {% empty %}<div>No awards added yet.</div>{% endfor %}
+            </div>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-briefcase"></i> Internships</div>
+            <div class="mm-timeline">
+                {% for internship in internships %}
+                    <div class="mm-timeline-item">
+                        <div class="mm-exp-title">{{ internship.title }}</div>
+                        <div class="mm-exp-company">{{ internship.company }}</div>
+                        <div class="mm-exp-dates">{{ internship.start_date|date:'Y-m-d' }} - {{ internship.end_date|date:'Y-m-d' }}</div>
+                        <ul>
+                            {% if internship.description %}<li>{{ internship.description }}</li>{% endif %}
+                        </ul>
+                    </div>
+                {% empty %}<div>No internships added yet.</div>{% endfor %}
+            </div>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-language"></i> Languages</div>
+            <ul style="list-style:none; padding:0;">
+                {% for lang in personal_info.languages.all %}
+                <li>{{ lang.name }} <span class="badge bg-dark">{{ lang.level }}</span></li>
+                {% empty %}<li style="color:#bcd;">No languages added.</li>{% endfor %}
+            </ul>
+        </div>
+        <div class="mm-section">
+            <div class="mm-section-title"><i class="fas fa-cogs"></i> Skills & Expertise</div>
+            <ul style="list-style:none; padding:0;">
+                {% for skill in technical_skills %}
+                <li>{{ skill.name }}
+                    <span class="mm-skill-bar">
+                        <span class="mm-skill-bar-fill" style="width:{{ skill.proficiency|default:5|add:'0'|floatformat:0|divisibleby:10|yesno:'100,80,60,40,20,10,0' }}%;"></span>
+                    </span>
+                </li>
+                {% empty %}<li style="color:#bcd;">No skills added.</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 

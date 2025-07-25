@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Resume Builder{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-bg { background: #f6f7fa; min-height: 100vh; }
+    .welcome-card { box-shadow: 0 4px 24px rgba(0,0,0,0.08); border-radius: 8px; background: #fff; }
+    .floating-card { box-shadow: 0 8px 32px rgba(0,0,0,0.10); border-radius: 8px; background: #f7f8fa; color: #f7f8fa; font-weight: 600; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; min-height: 120px; }
+    .section-card { box-shadow: 0 4px 24px rgba(0,0,0,0.08); border-radius: 8px; background: #fff; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .section-number { font-size: 2.5rem; font-weight: 600; }
+    .section-label { font-size: 1.2rem; color: #555; }
+    .quick-section-title { font-size: 1.5rem; font-weight: 600; margin-top: 3rem; margin-bottom: 1.5rem; color: #232526; }
+    .quick-card, .resume-section-card { box-shadow: 0 4px 24px rgba(0,0,0,0.08); border-radius: 8px; background: #fff; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem 1rem; text-align: center; }
+    .quick-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .quick-btn { margin-top: 1rem; }
+</style>
+<div class="dashboard-bg py-5">
+    <div class="container">
+        <div class="row mb-5 align-items-center justify-content-between">
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <div class="welcome-card p-5" style="background: linear-gradient(90deg, #f8fafc 60%, #e3f0ff 100%); border-left: 6px solid #1677ff; box-shadow: 0 6px 32px rgba(22,119,255,0.08); border-radius: 18px; width: 100%; text-align: center; margin-bottom: 2rem;">
+                    <h1 class="fw-bold mb-3" style="font-size:2.7rem; color:#232526; letter-spacing:1px; font-family: 'Segoe UI', 'Arial', sans-serif;">
+                        <span style="font-size:2.7rem; vertical-align:middle;">👋</span> Welcome,
+                    </h1>
+                    <p class="lead mb-2" style="font-size:1.35rem; color:#232526; font-family: 'Segoe UI', 'Arial', sans-serif;">
+                        Ready to build your standout resume?<br>
+                        <span style="font-weight:600;">Showcase your achievements</span> and open new career opportunities!
+                    </p>
+                </div>
+            </div>
+            <!-- Remove the floating Resume Builder card here -->
+        </div>
+        <div class="row g-4 mb-4">
+            <!-- Remove this summary cards row -->
+        </div>
+        <!-- Quick Actions -->
+        <div class="quick-section-title">Quick Actions</div>
+        <div class="row g-4 mb-4">
+            <div class="col-12 col-md-4">
+                <div class="quick-card">
+                    <div class="quick-icon text-primary"><i class="fas fa-user"></i></div>
+                    <div class="fw-bold mb-1">Personal Info</div>
+                    <div class="text-muted mb-2">Update your contact details</div>
+                    <a href="{% url 'personal_info' %}" class="btn btn-outline-dark quick-btn">Edit Info</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="quick-card">
+                    <div class="quick-icon text-danger"><i class="fas fa-file-pdf"></i></div>
+                    <div class="fw-bold mb-1">Create Resume</div>
+                    <div class="text-muted mb-2">Generate your professional resume</div>
+                    <a href="{% url 'resume_list' %}" class="btn btn-outline-dark quick-btn">Create</a>
+                </div>
+            </div>
+        </div>
+        <!-- Resume Sections -->
+        <div class="quick-section-title">Resume Sections</div>
+        <div class="row g-4 mb-4">
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-dark"><i class="fas fa-cogs"></i></div>
+                    <div class="fw-bold mb-1">Skills</div>
+                    <a href="{% url 'skill_list' %}" class="btn btn-outline-dark quick-btn">View Skills</a>
+                    <a href="{% url 'skill_create' %}" class="btn btn-dark quick-btn mt-2">Add Skill</a>
+                </div>
+            </div>
+            <!-- Experience Section Start -->
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-dark"><i class="fas fa-briefcase"></i></div>
+                    <div class="fw-bold mb-1">Experience</div>
+                    <a href="{% url 'work_experience_list' %}" class="btn btn-outline-dark quick-btn">View Experience</a>
+                    <a href="{% url 'work_experience_create' %}" class="btn btn-dark quick-btn mt-2">Add Experience</a>
+                </div>
+            </div>
+            <!-- Experience Section End -->
+            <!-- Projects Section Start -->
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-primary"><i class="fas fa-tasks"></i></div>
+                    <div class="fw-bold mb-1">Projects</div>
+                    <a href="{% url 'project_list' %}" class="btn btn-outline-dark quick-btn">View Projects</a>
+                    <a href="{% url 'project_create' %}" class="btn btn-dark quick-btn mt-2">Add Project</a>
+                </div>
+            </div>
+            <!-- Projects Section End -->
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-info"><i class="fas fa-certificate"></i></div>
+                    <div class="fw-bold mb-1">Certifications</div>
+                    <a href="{% url 'certification_list' %}" class="btn btn-outline-dark quick-btn">View Certifications</a>
+                    <a href="{% url 'certification_create' %}" class="btn btn-dark quick-btn mt-2">Add Certification</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-warning"><i class="fas fa-briefcase"></i></div>
+                    <div class="fw-bold mb-1">Internships</div>
+                    <a href="{% url 'internship_list' %}" class="btn btn-outline-dark quick-btn">View Internships</a>
+                    <a href="{% url 'internship_create' %}" class="btn btn-dark quick-btn mt-2">Add Internship</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-warning"><i class="fas fa-award"></i></div>
+                    <div class="fw-bold mb-1">Awards</div>
+                    <a href="{% url 'award_list' %}" class="btn btn-outline-dark quick-btn">View Awards</a>
+                    <a href="{% url 'award_create' %}" class="btn btn-dark quick-btn mt-2">Add Award</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-secondary"><i class="fas fa-language"></i></div>
+                    <div class="fw-bold mb-1">Languages</div>
+                    <a href="{% url 'language_list' %}" class="btn btn-outline-dark quick-btn">View Languages</a>
+                    <a href="{% url 'language_create' %}" class="btn btn-dark quick-btn mt-2">Add Language</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-primary"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="fw-bold mb-1">Education</div>
+                    <a href="{% url 'education_list' %}" class="btn btn-outline-dark quick-btn">View Education</a>
+                    <a href="{% url 'education_create' %}" class="btn btn-dark quick-btn mt-2">Add Education</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="resume-section-card">
+                    <div class="quick-icon text-success"><i class="fas fa-user-friends"></i></div>
+                    <div class="fw-bold mb-1">References</div>
+                    <a href="{% url 'reference_list' %}" class="btn btn-outline-dark quick-btn">View References</a>
+                    <a href="{% url 'reference_create' %}" class="btn btn-dark quick-btn mt-2">Add Reference</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Select Resume Template - Resume Builder{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-8 text-center">
+            <h1 class="fw-bold mb-2">Select a Resume Template</h1>
+            <p class="lead mb-0">Choose a template to start building your resume. You can change the template later.</p>
+        </div>
+    </div>
+    <div class="row g-4">
+        {% for template in templates %}
+            {% if template.name != 'Creative' and template.name != 'Two Column' %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card shadow rounded-4 h-100">
+                        {% if template.name == 'Classic' %}
+                            <img src="{% static 'resume_templates/classic.png' %}" class="card-img-top" alt="Classic preview" style="height: 220px; object-fit: cover; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                        {% elif template.name == 'Modern' %}
+                            <img src="{% static 'resume_templates/modern.png' %}" class="card-img-top" alt="Modern preview" style="height: 220px; object-fit: cover; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                        {% elif template.name == 'Professional' %}
+                            <img src="{% static 'resume_templates/professional.png' %}" class="card-img-top" alt="Professional preview" style="height: 220px; object-fit: cover; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                        {% elif template.name == 'Minimalist' %}
+                            <img src="{% static 'resume_templates/minimalist.png' %}" class="card-img-top" alt="Minimalist preview" style="height: 220px; object-fit: cover; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h5 class="card-title fw-bold mb-2">{{ template.name }}</h5>
+                            <p class="card-text text-muted mb-3">{{ template.description }}</p>
+                            <form method="post" action="{% url 'resume_create' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="template_id" value="{{ template.id }}" />
+                                <button type="submit" class="btn btn-dark w-100">Use This Template</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center rounded-4 shadow-sm">
+                No templates available. Please contact support.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

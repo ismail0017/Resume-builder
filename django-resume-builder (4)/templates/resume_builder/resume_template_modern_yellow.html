@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume - {{ personal_info.first_name }} {{ personal_info.last_name }}{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: #f6ff8f !important;
+    }
+    .modern-yellow-resume {
+        background: #f6ff8f;
+        color: #222;
+        font-family: 'Georgia', serif;
+        padding: 40px 30px;
+        max-width: 900px;
+        margin: 40px auto;
+        border-radius: 18px;
+        box-shadow: 0 0 24px rgba(0,0,0,0.08);
+    }
+    .modern-yellow-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+    }
+    .modern-yellow-name {
+        font-size: 3.2rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        line-height: 1.1;
+        font-family: 'Playfair Display', serif;
+    }
+    .modern-yellow-photo {
+        width: 140px;
+        height: 140px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 4px solid #e6e6e6;
+    }
+    .modern-yellow-contact {
+        margin-top: 10px;
+        font-size: 1.1rem;
+        line-height: 1.5;
+    }
+    .modern-yellow-section {
+        margin-top: 36px;
+    }
+    .modern-yellow-section-title {
+        font-size: 2rem;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+    }
+    .modern-yellow-section-title span {
+        font-size: 1.3rem;
+        margin-right: 10px;
+        font-family: 'Arial', sans-serif;
+    }
+    .modern-yellow-list {
+        margin-left: 0;
+        padding-left: 1.5em;
+    }
+    .modern-yellow-skills, .modern-yellow-languages {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 30px;
+        margin-bottom: 10px;
+    }
+    .modern-yellow-skill, .modern-yellow-language {
+        background: #fffbe6;
+        border-radius: 8px;
+        padding: 6px 18px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border-left: 4px solid #b6c800;
+    }
+    .modern-yellow-employment {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+    }
+    .modern-yellow-job {
+        flex: 1 1 320px;
+        margin-bottom: 18px;
+    }
+    .modern-yellow-job-title {
+        font-weight: 600;
+        font-size: 1.15rem;
+    }
+    .modern-yellow-job-company {
+        font-style: italic;
+        color: #666;
+        font-size: 1rem;
+    }
+    .modern-yellow-job-dates {
+        color: #b6c800;
+        font-size: 0.98rem;
+        margin-bottom: 4px;
+    }
+    .modern-yellow-job-desc {
+        font-size: 1rem;
+        margin-bottom: 0.5em;
+    }
+</style>
+<div class="modern-yellow-resume">
+    <div class="modern-yellow-header">
+        <div>
+            <div class="modern-yellow-name">
+                {{ personal_info.first_name|upper }} {{ personal_info.last_name|upper }}
+            </div>
+            <div class="modern-yellow-contact">
+                {{ personal_info.position }}<br>
+                {{ personal_info.address }}<br>
+                {{ personal_info.phone }} | {{ personal_info.email }}
+            </div>
+        </div>
+        {% if personal_info.profile_picture %}
+        <img src="{{ personal_info.profile_picture.url }}" class="modern-yellow-photo" alt="Profile Photo">
+        {% endif %}
+    </div>
+    <div class="modern-yellow-section">
+        <div class="modern-yellow-section-title"><span>①</span>PROFILE</div>
+        <div>{{ personal_info.summary }}</div>
+    </div>
+    <div class="modern-yellow-section">
+        <div class="modern-yellow-section-title"><span>②</span>SKILLS</div>
+        <div class="modern-yellow-skills">
+            {% for skill in technical_skills %}
+                <div class="modern-yellow-skill">{{ skill.name }}</div>
+            {% empty %}
+                <div class="text-muted">No skills added.</div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modern-yellow-section">
+        <div class="modern-yellow-section-title"><span>③</span>LANGUAGES</div>
+        <div class="modern-yellow-languages">
+            {% for language in languages %}
+                <div class="modern-yellow-language">{{ language.name }}</div>
+            {% empty %}
+                <div class="text-muted">No languages added.</div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modern-yellow-section">
+        <div class="modern-yellow-section-title"><span>④</span>EMPLOYMENT HISTORY</div>
+        <div class="modern-yellow-employment">
+            {% for experience in work_experiences %}
+            <div class="modern-yellow-job">
+                <div class="modern-yellow-job-title">{{ experience.position }}</div>
+                <div class="modern-yellow-job-company">{{ experience.company }}, {{ experience.location }}</div>
+                <div class="modern-yellow-job-dates">
+                    {{ experience.start_date|date:"F Y" }} — {% if experience.end_date %}{{ experience.end_date|date:"F Y" }}{% else %}Present{% endif %}
+                </div>
+                <div class="modern-yellow-job-desc">{{ experience.description }}</div>
+            </div>
+            {% empty %}
+            <div class="text-muted">No work experience added.</div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modern-yellow-section">
+        <div class="modern-yellow-section-title"><span>⑤</span>EDUCATION</div>
+        <ul class="modern-yellow-list">
+            {% for education in educations %}
+            <li>
+                <strong>{{ education.degree }}</strong>, {{ education.institution }}<br>
+                <span style="color:#b6c800;">{{ education.start_date|date:"F Y" }} — {% if education.end_date %}{{ education.end_date|date:"F Y" }}{% else %}Present{% endif %}</span>
+            </li>
+            {% empty %}
+            <li class="text-muted">No education added.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %} 

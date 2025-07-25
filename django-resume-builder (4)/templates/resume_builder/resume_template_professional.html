@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume - {{ personal_info.first_name }} {{ personal_info.last_name }}{% endblock %}
+
+{% block content %}
+<style>
+    @page { size: A4; margin: 0; }
+    .pro-a4-wrap {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        background: #f8f8f8;
+        font-family: 'Segoe UI', 'Georgia', serif;
+        color: #232526;
+        display: flex;
+        box-shadow: 0 0 24px rgba(0,0,0,0.10);
+    }
+    .pro-main {
+        flex: 2.2;
+        background: #fff;
+        padding: 32mm 18mm 18mm 32mm;
+        display: flex;
+        flex-direction: column;
+        min-height: 297mm;
+    }
+    .pro-sidebar {
+        flex: 1;
+        background: #183153;
+        color: #fff;
+        padding: 32mm 16mm 18mm 16mm;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 297mm;
+    }
+    .pro-photo {
+        width: 38mm;
+        height: 38mm;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #eee;
+        margin-bottom: 12mm;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .pro-photo img {
+        width: 100%; height: 100%; object-fit: cover;
+    }
+    .pro-name {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: #183153;
+        margin-bottom: 2mm;
+        text-transform: uppercase;
+    }
+    .pro-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #1677ff;
+        margin-bottom: 2mm;
+    }
+    .pro-section {
+        margin-bottom: 10mm;
+    }
+    .pro-section-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1677ff;
+        letter-spacing: 1px;
+        margin-bottom: 2mm;
+        border-bottom: 1.5px solid #e0e0e0;
+        padding-bottom: 2mm;
+    }
+    .pro-profile, .pro-job-desc, .pro-edu-desc, .pro-cert-desc, .pro-award-desc, .pro-intern-desc, .pro-ref-desc {
+        font-size: 1.05rem;
+        margin-bottom: 2mm;
+    }
+    .pro-job-title, .pro-edu-degree, .pro-cert-title, .pro-award-title, .pro-intern-title, .pro-ref-title {
+        font-weight: 600;
+        font-size: 1.08rem;
+        color: #183153;
+    }
+    .pro-job-company, .pro-edu-school, .pro-cert-issuer, .pro-award-issuer, .pro-intern-company, .pro-ref-rel {
+        color: #1677ff;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    .pro-job-dates, .pro-edu-dates, .pro-cert-dates, .pro-award-dates, .pro-intern-dates, .pro-ref-contact {
+        font-size: 0.95rem;
+        color: #888;
+        margin-bottom: 2mm;
+    }
+    .pro-list {
+        list-style: disc inside;
+        margin: 0 0 2mm 2mm;
+        padding: 0;
+        font-size: 1.05rem;
+    }
+    .pro-sidebar-section {
+        margin-bottom: 18mm;
+        width: 100%;
+    }
+    .pro-sidebar-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 1px;
+        margin-bottom: 2mm;
+        border-bottom: 1.5px solid #3a4a6b;
+        padding-bottom: 2mm;
+    }
+    .pro-sidebar-contact {
+        font-size: 1rem;
+        margin-bottom: 2mm;
+        word-break: break-all;
+    }
+    .pro-skill-list, .pro-lang-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .pro-skill-list li, .pro-lang-list li {
+        margin-bottom: 6px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .pro-skill-bar {
+        background: #fff;
+        border-radius: 8px;
+        height: 6px;
+        width: 60px;
+        margin-left: 8px;
+        overflow: hidden;
+    }
+    .pro-skill-bar-fill {
+        background: #1677ff;
+        height: 100%;
+        border-radius: 8px;
+    }
+    .pro-lang-level {
+        margin-left: 8px;
+        color: #1677ff;
+        font-size: 0.95em;
+    }
+    @media print { body { background: none !important; } .pro-a4-wrap { box-shadow: none; } }
+</style>
+<div class="pro-a4-wrap">
+    <div class="pro-main">
+        <div class="pro-name">{{ personal_info.first_name|title }} {{ personal_info.last_name|title }}</div>
+        <div class="pro-title">{{ personal_info.profession }}</div>
+        <div class="pro-section">
+            <div class="pro-section-title">Profile</div>
+            <div class="pro-profile">{{ personal_info.summary }}</div>
+        </div>
+        <div class="pro-section">
+            <div class="pro-section-title">Employment History</div>
+            {% for exp in work_experiences %}
+                <div class="pro-job-title">{{ exp.title }}</div>
+                <div class="pro-job-company">{{ exp.company }}</div>
+                <div class="pro-job-dates">{{ exp.start_date|date:'F Y' }} — {% if exp.end_date %}{{ exp.end_date|date:'F Y' }}{% else %}Present{% endif %}</div>
+                <ul class="pro-list">
+                    {% if exp.description %}<li>{{ exp.description }}</li>{% endif %}
+                    {% if exp.responsibilities %}
+                        {% for item in exp.responsibilities.splitlines %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            {% empty %}<div class="pro-job-desc" style="color:#bbb;">No work experience added.</div>{% endfor %}
+        </div>
+        <div class="pro-section">
+            <div class="pro-section-title">Education</div>
+            {% for edu in educations %}
+                <div class="pro-edu-degree">{{ edu.degree }}</div>
+                <div class="pro-edu-school">{{ edu.school }}</div>
+                <div class="pro-edu-dates">{{ edu.start_date|date:'Y' }} - {{ edu.end_date|date:'Y' }}</div>
+                <ul class="pro-list">
+                    {% if edu.description %}<li>{{ edu.description }}</li>{% endif %}
+                </ul>
+            {% empty %}<div class="pro-edu-desc" style="color:#bbb;">No education added.</div>{% endfor %}
+        </div>
+        <div class="pro-section">
+            <div class="pro-section-title">Projects</div>
+            {% for project in projects %}
+                <div class="pro-job-title">{{ project.title }}</div>
+                <ul class="pro-list">
+                    {% if project.description %}<li>{{ project.description }}</li>{% endif %}
+                </ul>
+            {% empty %}<div class="pro-job-desc" style="color:#bbb;">No projects added.</div>{% endfor %}
+        </div>
+        <div class="pro-section">
+            <div class="pro-section-title">Certifications</div>
+            {% for cert in certifications %}
+                <div class="pro-cert-title">{{ cert.name }}</div>
+                <div class="pro-cert-issuer">{{ cert.issuer }}</div>
+                <div class="pro-cert-dates">{{ cert.issue_date|date:'Y-m-d' }}</div>
+                <ul class="pro-list">
+                    {% if cert.description %}<li>{{ cert.description }}</li>{% endif %}
+                </ul>
+            {% empty %}<div class="pro-cert-desc" style="color:#bbb;">No certifications added.</div>{% endfor %}
+        </div>
+        <div class="pro-section">
+            <div class="pro-section-title">Awards</div>
+            {% for award in awards %}
+                <div class="pro-award-title">{{ award.title }}</div>
+                <div class="pro-award-issuer">{{ award.issuer }}</div>
+                <div class="pro-award-dates">{{ award.date_received|date:'Y-m-d' }}</div>
+                <ul class="pro-list">
+                    {% if award.description %}<li>{{ award.description }}</li>{% endif %}
+                </ul>
+            {% empty %}<div class="pro-award-desc" style="color:#bbb;">No awards added.</div>{% endfor %}
+        </div>
+        <div class="pro-section">
+            <div class="pro-section-title">Internships</div>
+            {% for internship in internships %}
+                <div class="pro-intern-title">{{ internship.title }}</div>
+                <div class="pro-intern-company">{{ internship.company }}</div>
+                <div class="pro-intern-dates">{{ internship.start_date|date:'Y-m-d' }} - {{ internship.end_date|date:'Y-m-d' }}</div>
+                <ul class="pro-list">
+                    {% if internship.description %}<li>{{ internship.description }}</li>{% endif %}
+                </ul>
+            {% empty %}<div class="pro-intern-desc" style="color:#bbb;">No internships added.</div>{% endfor %}
+        </div>
+        <div class="pro-section">
+            <div class="pro-section-title">References</div>
+            {% for ref in references %}
+                <div class="pro-ref-title">{{ ref.name }}</div>
+                <div class="pro-ref-rel">{{ ref.relationship }}</div>
+                <div class="pro-ref-contact">{{ ref.phone }} | {{ ref.email }}</div>
+                <ul class="pro-list">
+                    {% if ref.description %}<li>{{ ref.description }}</li>{% endif %}
+                </ul>
+            {% empty %}<div class="pro-ref-desc" style="color:#bbb;">No references added.</div>{% endfor %}
+        </div>
+    </div>
+    <div class="pro-sidebar">
+        <div class="pro-photo">
+            {% if personal_info.photo %}
+                <img src="{{ personal_info.photo.url }}" alt="Photo">
+            {% else %}
+                <img src="/static/resume_templates/default_photo.png" alt="Photo">
+            {% endif %}
+        </div>
+        <div class="pro-sidebar-section">
+            <div class="pro-sidebar-title">Details</div>
+            <div class="pro-sidebar-contact">{{ personal_info.address }}</div>
+            <div class="pro-sidebar-contact">{{ personal_info.city }}, {{ personal_info.country }}</div>
+            <div class="pro-sidebar-contact">{{ personal_info.phone }}</div>
+            <div class="pro-sidebar-contact">{{ personal_info.email }}</div>
+        </div>
+        <div class="pro-sidebar-section">
+            <div class="pro-sidebar-title">Skills</div>
+            <ul class="pro-skill-list">
+                {% for skill in technical_skills %}
+                <li>{{ skill.name }}
+                    <span class="pro-skill-bar">
+                        <span class="pro-skill-bar-fill" style="width:{{ skill.level|default:5|add:'0'|floatformat:0|divisibleby:10|yesno:'100,80,60,40,20,10,0' }}%;"></span>
+                    </span>
+                </li>
+                {% empty %}<li style="color:#bcd;">No skills added.</li>{% endfor %}
+            </ul>
+        </div>
+        <div class="pro-sidebar-section">
+            <div class="pro-sidebar-title">Languages</div>
+            <ul class="pro-lang-list">
+                {% for lang in personal_info.languages.all %}
+                <li>{{ lang.name }}<span class="pro-lang-level">{{ lang.level }}</span></li>
+                {% empty %}<li style="color:#bcd;">No languages added.</li>{% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 

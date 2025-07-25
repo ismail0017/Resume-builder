@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Email - Resume Builder{% endblock %}
+
+{% block public_content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-header">
+                    <h3 class="text-center font-weight-light my-4">Confirm Email Address</h3>
+                </div>
+                <div class="card-body text-center">
+                    <p>Please confirm that <strong>{{ confirmation.email_address.email }}</strong> is an email address for user {{ confirmation.email_address.user }}.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

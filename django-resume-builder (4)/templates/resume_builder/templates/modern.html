@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personal_info.full_name }} - Resume</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .resume-container {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .name {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .contact-info {
+            font-size: 1.1em;
+            color: #666;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .experience-item, .education-item, .project-item {
+            margin-bottom: 20px;
+            padding-left: 20px;
+            border-left: 3px solid #e9ecef;
+        }
+        .item-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .item-subtitle {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+        .item-date {
+            color: #007bff;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .skill-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .languages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .language-badge {
+            background: #007bff;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        {% if personal_info %}
+        <div class="header">
+            <div class="name">{{ personal_info.full_name }}</div>
+            <div class="contact-info">
+                {{ personal_info.email }} | {{ personal_info.phone }}
+                {% if personal_info.address %} | {{ personal_info.address }}{% endif %}
+                {% if personal_info.linkedin %}<br><a href="{{ personal_info.linkedin }}">LinkedIn</a>{% endif %}
+                {% if personal_info.github %} | <a href="{{ personal_info.github }}">GitHub</a>{% endif %}
+                {% if personal_info.website %} | <a href="{{ personal_info.website }}">Website</a>{% endif %}
+            </div>
+        </div>
+
+        {% if personal_info.summary %}
+        <div class="section">
+            <div class="section-title">Professional Summary</div>
+            <p>{{ personal_info.summary }}</p>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        {% if work_experiences %}
+        <div class="section">
+            <div class="section-title">Work Experience</div>
+            {% for experience in work_experiences %}
+            <div class="experience-item">
+                <div class="item-title">{{ experience.position }}</div>
+                <div class="item-subtitle">{{ experience.company }} - {{ experience.location }}</div>
+                <div class="item-date">{{ experience.start_date|date:"M Y" }} - {% if experience.is_current %}Present{% else %}{{ experience.end_date|date:"M Y" }}{% endif %}</div>
+                <p>{{ experience.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if educations %}
+        <div class="section">
+            <div class="section-title">Education</div>
+            {% for education in educations %}
+            <div class="education-item">
+                <div class="item-title">{{ education.degree }} in {{ education.field_of_study }}</div>
+                <div class="item-subtitle">{{ education.institution }}</div>
+                <div class="item-date">{{ education.start_date|date:"M Y" }} - {% if education.is_current %}Present{% else %}{{ education.end_date|date:"M Y" }}{% endif %}</div>
+                {% if education.gpa %}<p>GPA: {{ education.gpa }}</p>{% endif %}
+                {% if education.description %}<p>{{ education.description }}</p>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if projects %}
+        <div class="section">
+            <div class="section-title">Projects</div>
+            {% for project in projects %}
+            <div class="project-item">
+                <div class="item-title">{{ project.title }}</div>
+                <div class="item-date">{{ project.start_date|date:"M Y" }} - {% if project.is_ongoing %}Ongoing{% else %}{{ project.end_date|date:"M Y" }}{% endif %}</div>
+                <p>{{ project.description }}</p>
+                <p><strong>Technologies:</strong> {{ project.technologies }}</p>
+                {% if project.github_url or project.live_url %}
+                <p>
+                    {% if project.github_url %}<a href="{{ project.github_url }}">GitHub</a>{% endif %}
+                    {% if project.live_url %}{% if project.github_url %} | {% endif %}<a href="{{ project.live_url }}">Live Demo</a>{% endif %}
+                </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if technical_skills %}
+        <div class="section">
+            <div class="section-title">Technical Skills</div>
+            <div class="skills-grid">
+                {% regroup technical_skills by category as skill_groups %}
+                {% for group in skill_groups %}
+                <div class="skill-item">
+                    <strong>{{ group.grouper|title }}:</strong>
+                    {% for skill in group.list %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if certifications %}
+        <div class="section">
+            <div class="section-title">Certifications</div>
+            {% for cert in certifications %}
+            <div class="experience-item">
+                <div class="item-title">{{ cert.name }}</div>
+                <div class="item-subtitle">{{ cert.issuing_organization }}</div>
+                <div class="item-date">{{ cert.issue_date|date:"M Y" }}{% if cert.expiry_date %} - {{ cert.expiry_date|date:"M Y" }}{% endif %}</div>
+                {% if cert.credential_url %}<p><a href="{{ cert.credential_url }}">View Credential</a></p>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if languages %}
+        <div class="section">
+            <div class="section-title">Languages</div>
+            <div class="languages">
+                {% for language in languages %}
+                <span class="language-badge">{{ language.name }} - {{ language.get_proficiency_display }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume - {{ personal_info.first_name }} {{ personal_info.last_name }}{% endblock %}
+
+{% block content %}
+<style>
+    body { background: #f5f6fa !important; }
+    .bold-color-resume {
+        background: #fff;
+        color: #232526;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        max-width: 900px;
+        margin: 40px auto;
+        border-radius: 12px;
+        box-shadow: 0 0 24px rgba(0,0,0,0.10);
+        overflow: hidden;
+    }
+    .bold-color-header {
+        background: #1677ff;
+        color: #fff;
+        padding: 36px 40px 24px 40px;
+        text-align: left;
+    }
+    .bold-color-name {
+        font-size: 2.6rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+    }
+    .bold-color-title {
+        font-size: 1.1rem;
+        color: #dbeafe;
+        margin-bottom: 0;
+    }
+    .bold-color-content {
+        padding: 36px 40px;
+    }
+    .bold-color-section {
+        margin-bottom: 32px;
+    }
+    .bold-color-section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1677ff;
+        border-bottom: 2px solid #1677ff;
+        margin-bottom: 10px;
+        padding-bottom: 2px;
+        letter-spacing: 0.5px;
+    }
+    .bold-color-skill {
+        background: #e6f0ff;
+        color: #1677ff;
+        border-radius: 6px;
+        padding: 4px 14px;
+        margin: 0 8px 8px 0;
+        font-size: 1rem;
+        display: inline-block;
+    }
+    .bold-color-list {
+        margin-left: 0;
+        padding-left: 1.5em;
+    }
+</style>
+<div class="bold-color-resume">
+    <div class="bold-color-header">
+        <div class="bold-color-name">{{ personal_info.first_name|title }} {{ personal_info.last_name|title }}</div>
+        <div class="bold-color-title">{{ personal_info.position }}</div>
+        <div style="font-size:1rem; margin-top:10px;">{{ personal_info.email }} | {{ personal_info.phone }} | {{ personal_info.address }}</div>
+    </div>
+    <div class="bold-color-content">
+        <div class="bold-color-section">
+            <div class="bold-color-section-title">Profile</div>
+            <div>{{ personal_info.summary }}</div>
+        </div>
+        <div class="bold-color-section">
+            <div class="bold-color-section-title">Skills</div>
+            {% for skill in technical_skills %}
+                <span class="bold-color-skill">{{ skill.name }}</span>
+            {% empty %}
+                <span class="text-muted">No skills added.</span>
+            {% endfor %}
+        </div>
+        <div class="bold-color-section">
+            <div class="bold-color-section-title">Employment History</div>
+            <ul class="bold-color-list">
+                {% for experience in work_experiences %}
+                <li>
+                    <strong>{{ experience.position }}</strong>, {{ experience.company }}<br>
+                    <span style="color:#888;">{{ experience.start_date|date:"F Y" }} — {% if experience.end_date %}{{ experience.end_date|date:"F Y" }}{% else %}Present{% endif %}</span><br>
+                    {{ experience.description }}
+                </li>
+                {% empty %}
+                <li class="text-muted">No work experience added.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="bold-color-section">
+            <div class="bold-color-section-title">Education</div>
+            <ul class="bold-color-list">
+                {% for education in educations %}
+                <li>
+                    <strong>{{ education.degree }}</strong>, {{ education.institution }}<br>
+                    <span style="color:#888;">{{ education.start_date|date:"F Y" }} — {% if education.end_date %}{{ education.end_date|date:"F Y" }}{% else %}Present{% endif %}</span>
+                </li>
+                {% empty %}
+                <li class="text-muted">No education added.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 
